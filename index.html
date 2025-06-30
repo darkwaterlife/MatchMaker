@@ -43,16 +43,12 @@
         <header class="w-full max-w-4xl mx-auto py-4">
             <h1 class="text-4xl font-bold text-center text-blue-600 dark:text-blue-400">Answer & Connect</h1>
             <p class="text-center text-gray-600 dark:text-gray-400 mt-2">Find your match based on what truly matters.</p>
-            <div id="your-user-id" class="mt-4 text-center text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
-                Your User ID: <span class="font-semibold text-gray-800 dark:text-gray-200" id="user-id-display">Loading...</span>
-                 <button id="copy-id-btn" class="ml-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xs font-medium py-1 px-2 rounded-md">Copy</button>
-            </div>
         </header>
 
         <nav class="w-full max-w-4xl mx-auto mt-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex space-x-4">
-                <button data-view="profile-view" class="nav-tab py-3 px-4 font-medium text-blue-600 border-b-2 border-blue-600">My Profile & Questions</button>
-                <button data-view="matches-view" class="nav-tab py-3 px-4 font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">My Matches</button>
+                <button data-view="profile-view" class="nav-tab py-3 px-4 font-medium text-blue-600 border-b-2 border-blue-600">My Profile</button>
+                <button data-view="compare-view" class="nav-tab py-3 px-4 font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">Compare Profiles</button>
             </div>
         </nav>
 
@@ -80,21 +76,9 @@
                         </div>
                     </div>
 
-                    <div id="preferences-section" class="pt-6 border-t border-gray-200 dark:border-gray-700">
-                         <h2 class="text-2xl font-bold mb-4">I'm Looking For...</h2>
-                         <div>
-                            <label for="gender-preference" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Show me</label>
-                            <select id="gender-preference" name="gender-preference" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
-                                <option value="Everyone">Everyone</option>
-                                <option value="Men">Men</option>
-                                <option value="Women">Women</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div id="questions-section" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <h2 class="text-2xl font-bold mb-4">Your Answers</h2>
-                         <p class="mb-6 text-gray-600 dark:text-gray-400">Answer as many questions as you like. The more you answer, the better your matches!</p>
+                         <p class="mb-6 text-gray-600 dark:text-gray-400">Answer as many questions as you like. Your progress is saved automatically.</p>
                        
                         <div id="questions-container" class="mt-6 min-h-[150px] bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                             <!-- Question will be injected here -->
@@ -108,24 +92,25 @@
 
 
                     <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                         <h3 class="text-xl font-bold mb-2">Your Match Threshold</h3>
-                         <label for="match-percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Only show me people who match at least <span id="percentage-display" class="font-bold text-blue-600">50%</span> of our common answers.</label>
-                         <input type="range" id="match-percentage" min="10" max="100" step="1" value="50" class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer mt-2">
+                         <h3 class="text-xl font-bold mb-2">Share Your Profile</h3>
+                         <p class="mb-4 text-gray-600 dark:text-gray-400">Click the button below to generate a profile code. Share this code with someone to see how well you match!</p>
+                         <button id="share-profile-btn" class="w-full mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg">Generate & Copy My Profile Code</button>
                     </div>
-                    
-                    <button id="find-matches-btn" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform duration-200 hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed">
-                        <span id="find-matches-text">Find My Matches</span>
-                        <div id="find-matches-spinner" class="hidden animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto"></div>
-                    </button>
                 </div>
             </div>
 
-            <div id="matches-view" class="view hidden">
+            <div id="compare-view" class="view hidden">
                  <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                     <h2 class="text-2xl font-bold mb-4">Your Matches</h2>
-                     <p class="mb-6 text-gray-600 dark:text-gray-400">These users meet your match criteria, and you meet theirs! Your matches will improve as you answer more questions.</p>
-                     <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <p id="no-matches-found" class="text-center col-span-full text-gray-500 italic">You don't have any matches yet. Complete your profile and tap "Find My Matches"!</p>
+                     <h2 class="text-2xl font-bold mb-4">Compare Profiles</h2>
+                     <p class="mb-6 text-gray-600 dark:text-gray-400">Paste a profile code from a friend below to see your compatibility score.</p>
+                     
+                     <textarea id="compare-code-input" rows="8" class="w-full bg-gray-100 dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2 font-mono text-sm" placeholder="Paste profile code here..."></textarea>
+                     <button id="compare-btn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg">Compare</button>
+
+                     <div id="match-result-container" class="hidden mt-8 text-center">
+                        <h3 class="text-2xl font-bold">Your Match Result</h3>
+                        <div id="match-percentage-display" class="my-4 text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">0%</div>
+                        <p id="match-details" class="text-gray-600 dark:text-gray-400"></p>
                      </div>
                  </div>
             </div>
@@ -138,15 +123,8 @@
 
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <script>
         // --- App State & Config ---
-        let db, auth;
-        let userId;
-        let appId;
         let currentQuestionIndex = 0;
 
         const allQuestions = [
@@ -174,23 +152,19 @@
         const totalQuestions = allQuestions.length;
 
         // --- UI Elements ---
-        const views = { profile: document.getElementById('profile-view'), matches: document.getElementById('matches-view') };
+        const views = { profile: document.getElementById('profile-view'), compare: document.getElementById('compare-view') };
         const navTabs = document.querySelectorAll('.nav-tab');
-        const userIdDisplay = document.getElementById('user-id-display');
-        const copyIdBtn = document.getElementById('copy-id-btn');
         const questionsContainer = document.getElementById('questions-container');
-        const percentageSlider = document.getElementById('match-percentage');
-        const percentageDisplay = document.getElementById('percentage-display');
-        const findMatchesBtn = document.getElementById('find-matches-btn');
-        const findMatchesText = document.getElementById('find-matches-text');
-        const findMatchesSpinner = document.getElementById('find-matches-spinner');
-        const matchesContainer = document.getElementById('matches-container');
-        const noMatchesFound = document.getElementById('no-matches-found');
+        const shareProfileBtn = document.getElementById('share-profile-btn');
+        const compareCodeInput = document.getElementById('compare-code-input');
+        const compareBtn = document.getElementById('compare-btn');
+        const matchResultContainer = document.getElementById('match-result-container');
+        const matchPercentageDisplay = document.getElementById('match-percentage-display');
+        const matchDetails = document.getElementById('match-details');
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
         const ageInput = document.getElementById('age');
         const genderSelect = document.getElementById('gender');
-        const genderPreferenceSelect = document.getElementById('gender-preference');
         const prevQuestionBtn = document.getElementById('prev-question-btn');
         const nextQuestionBtn = document.getElementById('next-question-btn');
 
@@ -219,7 +193,7 @@
         
         function getLocalProfile() {
             const profile = localStorage.getItem('userProfile');
-            return profile ? JSON.parse(profile) : { age: '', gender: '', genderPreference: 'Everyone', answers: {}, matchPercentage: 50 };
+            return profile ? JSON.parse(profile) : { age: '', gender: '', answers: {} };
         }
         
         function saveLocalProfile(profile) {
@@ -244,9 +218,6 @@
              const profile = getLocalProfile();
              ageInput.value = profile.age;
              genderSelect.value = profile.gender;
-             genderPreferenceSelect.value = profile.genderPreference;
-             percentageSlider.value = profile.matchPercentage;
-             percentageDisplay.textContent = `${profile.matchPercentage}%`;
              renderCurrentQuestion();
         }
 
@@ -276,113 +247,66 @@
             prevQuestionBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
         }
 
-        function renderMatches(matches = []) {
-             const savedMatches = localStorage.getItem('userMatches');
-             const matchesToRender = matches.length > 0 ? matches : (savedMatches ? JSON.parse(savedMatches) : []);
-             
-             matchesContainer.innerHTML = '';
-             if(matchesToRender.length === 0) {
-                 matchesContainer.appendChild(noMatchesFound);
-                 noMatchesFound.style.display = 'block';
-                 return;
-             }
-             
-             noMatchesFound.style.display = 'none';
-
-             matchesToRender.forEach(match => {
-                 const matchEl = document.createElement('div');
-                 matchEl.className = 'bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center';
-                 matchEl.innerHTML = `
-                    <p class="font-semibold text-lg">${match.age || 'N/A'}, ${match.gender || 'N/A'}</p>
-                     <p class="font-mono text-sm text-gray-500 dark:text-gray-400 truncate" title="${match.id}">ID: ...${match.id.slice(-8)}</p>
-                     <p class="text-2xl font-bold mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">${match.percentage}%</p>
-                     <p class="text-sm font-medium">Match (${match.commonQuestions} questions)</p>
-                 `;
-                 matchesContainer.appendChild(matchEl);
-             });
-
-             if(matches.length > 0) {
-                localStorage.setItem('userMatches', JSON.stringify(matches));
-             }
-        }
-
         // --- Matching Logic ---
 
-        async function findMatches() {
-            const myProfile = getLocalProfile();
-
-            if (!myProfile.age || !myProfile.gender) {
+        function generateProfileCode() {
+            const profile = getLocalProfile();
+            if (!profile.age || !profile.gender) {
                 showToast("Please fill out your Age and Gender first!");
                 return;
             }
-             if (Object.keys(myProfile.answers).length < 5) {
-                showToast(`Please answer at least 5 questions to find matches.`);
+            if (Object.keys(profile.answers).length === 0) {
+                showToast("Please answer at least one question before sharing!");
                 return;
             }
-            
-            findMatchesBtn.disabled = true;
-            findMatchesText.classList.add('hidden');
-            findMatchesSpinner.classList.remove('hidden');
+            const code = btoa(JSON.stringify(profile)); // Base64 encode the profile
+            navigator.clipboard.writeText(code)
+                .then(() => showToast("Profile code copied to clipboard!"))
+                .catch(() => showToast("Could not copy code."));
+        }
+
+        function compareProfiles() {
+            const myProfile = getLocalProfile();
+            const theirCode = compareCodeInput.value.trim();
+
+            if (!theirCode) {
+                showToast("Please paste a profile code.");
+                return;
+            }
 
             try {
-                const myProfileRef = doc(db, `artifacts/${appId}/public/data/profiles`, userId);
-                await setDoc(myProfileRef, myProfile);
+                const theirProfile = JSON.parse(atob(theirCode)); // Decode the Base64 string
 
-                const profilesCollection = collection(db, `artifacts/${appId}/public/data/profiles`);
-                const querySnapshot = await getDocs(profilesCollection);
-                
-                const allProfiles = [];
-                querySnapshot.forEach(doc => {
-                    if (doc.id !== userId) {
-                        allProfiles.push({ id: doc.id, ...doc.data() });
+                if (!theirProfile.answers || !theirProfile.age || !theirProfile.gender) {
+                   throw new Error("Invalid profile code.");
+                }
+
+                const myAnswerKeys = Object.keys(myProfile.answers);
+                const theirAnswerKeys = Object.keys(theirProfile.answers);
+                const commonKeys = myAnswerKeys.filter(key => theirAnswerKeys.includes(key));
+
+                if (commonKeys.length === 0) {
+                    showToast("You don't have any questions in common to compare!");
+                    return;
+                }
+
+                let matchingAnswers = 0;
+                commonKeys.forEach(key => {
+                    if (myProfile.answers[key] === theirProfile.answers[key]) {
+                        matchingAnswers++;
                     }
                 });
 
-                const myMatches = [];
-                for (const theirProfile of allProfiles) {
-                    if (!theirProfile.gender || !myProfile.genderPreference) continue;
-
-                    const iWantThem = myProfile.genderPreference === 'Everyone' || myProfile.genderPreference.includes(theirProfile.gender);
-                    const theyWantMe = theirProfile.genderPreference === 'Everyone' || theirProfile.genderPreference.includes(myProfile.gender);
-
-                    if (!iWantThem || !theyWantMe) continue;
-                    
-                    const myAnswerKeys = Object.keys(myProfile.answers);
-                    const theirAnswerKeys = Object.keys(theirProfile.answers || {});
-                    const commonKeys = myAnswerKeys.filter(key => theirAnswerKeys.includes(key));
-
-                    if (commonKeys.length < 5) continue; // Minimum threshold for a meaningful match
-
-                    let matchingAnswers = 0;
-                    commonKeys.forEach(key => {
-                        if (myProfile.answers[key] === theirProfile.answers[key]) {
-                            matchingAnswers++;
-                        }
-                    });
-
-                    const matchPercentage = (matchingAnswers / commonKeys.length) * 100;
-                    
-                    if (matchPercentage >= myProfile.matchPercentage && matchPercentage >= (theirProfile.matchPercentage || 50)) {
-                         myMatches.push({ 
-                             id: theirProfile.id, percentage: Math.round(matchPercentage),
-                             age: theirProfile.age, gender: theirProfile.gender,
-                             commonQuestions: commonKeys.length
-                        });
-                    }
-                }
+                const matchPercentage = (matchingAnswers / commonKeys.length) * 100;
                 
-                myMatches.sort((a,b) => b.percentage - a.percentage);
-                renderMatches(myMatches);
-                showToast(`Found ${myMatches.length} new match(es)!`);
-                showView('matches-view');
+                matchPercentageDisplay.textContent = `${Math.round(matchPercentage)}%`;
+                matchDetails.textContent = `Based on ${commonKeys.length} common question(s) answered. Their age is ${theirProfile.age}.`;
+                matchResultContainer.classList.remove('hidden');
 
-            } catch (error) {
-                console.error("Error finding matches:", error);
-                showToast("Could not connect to find matches. Please try again.");
-            } finally {
-                findMatchesBtn.disabled = false;
-                findMatchesText.classList.remove('hidden');
-                findMatchesSpinner.classList.add('hidden');
+            } catch(e) {
+                console.error(e);
+                showToast("Invalid or corrupted profile code. Please try again.");
+                matchResultContainer.classList.add('hidden');
             }
         }
 
@@ -400,7 +324,7 @@
             prevQuestionBtn.addEventListener('click', () => {
                 if (currentQuestionIndex > 0) {
                     currentQuestionIndex--;
-                } else { // Loop from end to beginning
+                } else { 
                     currentQuestionIndex = totalQuestions - 1;
                 }
                 renderCurrentQuestion();
@@ -409,7 +333,7 @@
             nextQuestionBtn.addEventListener('click', () => {
                 if (currentQuestionIndex < totalQuestions - 1) {
                     currentQuestionIndex++;
-                } else { // Loop from beginning to end
+                } else {
                     currentQuestionIndex = 0;
                 }
                 renderCurrentQuestion();
@@ -417,64 +341,15 @@
 
             ageInput.addEventListener('change', e => updateLocalProfile('age', e.target.value));
             genderSelect.addEventListener('change', e => updateLocalProfile('gender', e.target.value));
-            genderPreferenceSelect.addEventListener('change', e => updateLocalProfile('genderPreference', e.target.value));
-            percentageSlider.addEventListener('change', e => updateLocalProfile('matchPercentage', parseInt(e.target.value, 10)));
-            percentageSlider.addEventListener('input', e => {
-                 percentageDisplay.textContent = `${e.target.value}%`;
-            });
             
-            findMatchesBtn.addEventListener('click', findMatches);
-
-            copyIdBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(userIdDisplay.textContent)
-                .then(() => showToast("Your User ID has been copied!"))
-                .catch(err => {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = userIdDisplay.textContent;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    try { document.execCommand('copy'); showToast("Your User ID has been copied!"); }
-                    catch (err) { showToast("Failed to copy ID."); }
-                    document.body.removeChild(textArea);
-                });
-            });
+            shareProfileBtn.addEventListener('click', generateProfileCode);
+            compareBtn.addEventListener('click', compareProfiles);
         }
         
         function main() {
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'answer-connect-default';
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-            if (!firebaseConfig) {
-                document.getElementById('app-container').innerHTML = '<p class="text-red-500 text-center">Error: App configuration is missing. Cannot start.</p>';
-                return;
-            }
-            
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    userIdDisplay.textContent = userId;
-                    renderInitialProfile();
-                    renderMatches();
-                    setupEventListeners();
-                    showView('profile-view');
-                } else {
-                    try {
-                         if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                         } else {
-                            await signInAnonymously(auth);
-                         }
-                    } catch(error) {
-                        console.error("Sign-in failed:", error);
-                        document.getElementById('app-container').innerHTML = '<p class="text-red-500 text-center">Authentication failed. Please refresh.</p>';
-                    }
-                }
-            });
+            renderInitialProfile();
+            setupEventListeners();
+            showView('profile-view');
         }
         
         main();
