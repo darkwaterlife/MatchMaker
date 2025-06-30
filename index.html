@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer & Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .view {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .hidden {
+            display: none;
+        }
+         /* For the range slider */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #2563eb;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        input[type=range]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #2563eb;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+
+    <div id="app-container" class="min-h-screen flex flex-col items-center p-4">
+
+        <header class="w-full max-w-4xl mx-auto py-4">
+            <h1 class="text-4xl font-bold text-center text-blue-600 dark:text-blue-400">Answer & Connect</h1>
+            <p class="text-center text-gray-600 dark:text-gray-400 mt-2">Find your match based on what truly matters.</p>
+            <div id="your-user-id" class="mt-4 text-center text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 p-2 rounded-lg">
+                Your User ID: <span class="font-semibold text-gray-800 dark:text-gray-200" id="user-id-display">Loading...</span>
+                 <button id="copy-id-btn" class="ml-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-xs font-medium py-1 px-2 rounded-md">Copy</button>
+            </div>
+        </header>
+
+        <nav class="w-full max-w-4xl mx-auto mt-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex space-x-4">
+                <button data-view="profile-view" class="nav-tab py-3 px-4 font-medium text-blue-600 border-b-2 border-blue-600">My Profile & Questions</button>
+                <button data-view="matches-view" class="nav-tab py-3 px-4 font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">My Matches</button>
+            </div>
+        </nav>
+
+        <main class="w-full max-w-4xl mx-auto mt-6">
+
+            <div id="profile-view" class="view">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+                    
+                    <div id="demographics-section">
+                        <h2 class="text-2xl font-bold mb-4">About You</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label for="age" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Age</label>
+                                <input type="number" id="age" name="age" placeholder="e.g., 28" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                            </div>
+                            <div>
+                                <label for="gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gender</label>
+                                <select id="gender" name="gender" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                                    <option value="">Select...</option>
+                                    <option>Man</option>
+                                    <option>Woman</option>
+                                    <option>Non-binary</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="preferences-section" class="pt-6 border-t border-gray-200 dark:border-gray-700">
+                         <h2 class="text-2xl font-bold mb-4">I'm Looking For...</h2>
+                         <div>
+                            <label for="gender-preference" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Show me</label>
+                            <select id="gender-preference" name="gender-preference" class="mt-1 block w-full bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+                                <option value="Everyone">Everyone</option>
+                                <option value="Men">Men</option>
+                                <option value="Women">Women</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="questions-section" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <h2 class="text-2xl font-bold mb-4">Your Answers</h2>
+                         <p class="mb-6 text-gray-600 dark:text-gray-400">Answer as many questions as you like. The more you answer, the better your matches!</p>
+                       
+                        <div id="questions-container" class="mt-6 min-h-[150px] bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                            <!-- Question will be injected here -->
+                        </div>
+
+                        <div class="flex justify-between mt-4">
+                            <button id="prev-question-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 dark:bg-gray-600 dark:text-white font-bold py-2 px-6 rounded-lg transition-colors">Previous</button>
+                            <button id="next-question-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">Next</button>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                         <h3 class="text-xl font-bold mb-2">Your Match Threshold</h3>
+                         <label for="match-percentage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Only show me people who match at least <span id="percentage-display" class="font-bold text-blue-600">50%</span> of our common answers.</label>
+                         <input type="range" id="match-percentage" min="10" max="100" step="1" value="50" class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer mt-2">
+                    </div>
+                    
+                    <button id="find-matches-btn" class="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform duration-200 hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        <span id="find-matches-text">Find My Matches</span>
+                        <div id="find-matches-spinner" class="hidden animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-auto"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="matches-view" class="view hidden">
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+                     <h2 class="text-2xl font-bold mb-4">Your Matches</h2>
+                     <p class="mb-6 text-gray-600 dark:text-gray-400">These users meet your match criteria, and you meet theirs! Your matches will improve as you answer more questions.</p>
+                     <div id="matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <p id="no-matches-found" class="text-center col-span-full text-gray-500 italic">You don't have any matches yet. Complete your profile and tap "Find My Matches"!</p>
+                     </div>
+                 </div>
+            </div>
+
+        </main>
+        
+        <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white py-2 px-4 rounded-lg shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none">
+            <span id="toast-message"></span>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- App State & Config ---
+        let db, auth;
+        let userId;
+        let appId;
+        let currentQuestionIndex = 0;
+
+        const allQuestions = [
+            { id: 'f1', text: "What's your go-to comfort food?", options: ['Pizza', 'Mac & Cheese', 'Ice Cream', 'Soup'] },
+            { id: 'f2', text: 'Are you a spicy food lover or do you prefer mild flavors?', options: ['Spicy all the way!', 'Mild and flavorful'] },
+            { id: 'f3', text: "Do you prefer cooking at home or dining out?", options: ['Cooking at home', 'Dining out'] },
+            { id: 'f4', text: 'Are you a dessert person?', options: ['Yes, always save room!', 'Only occasionally', 'Not really'] },
+            { id: 'f5', text: 'Coffee or tea?', options: ['Coffee', 'Tea', 'Both', 'Neither'] },
+            { id: 'p1', text: 'What’s your favorite thing to do in your free time?', options: ['Read a book', 'Watch a movie/show', 'Play a game', 'Go outside'] },
+            { id: 'p2', text: 'Are you an indoors or outdoors person?', options: ['Indoors', 'Outdoors'] },
+            { id: 'p3', text: 'Are you a morning person or a night owl?', options: ['Morning person', 'Night owl'] },
+            { id: 'p5', text: 'My dream job would be...', options: ['Something creative', 'Something analytical', 'Something that helps others'] },
+            { id: 'p6', text: 'The last show I binge-watched was a...', options: ['Comedy', 'Drama', 'Thriller', 'Documentary'] },
+            { id: 'p7', text: 'How often do you dance?', options: ['Every chance I get!', 'Only at parties', 'Never, if I can help it'] },
+            { id: 'p8', text: 'If I could have any superpower, it would be...', options: ['Flight', 'Invisibility', 'Super strength', 'Teleportation'] },
+            { id: 'p9', text: 'My favorite way to stay active is...', options: ['Going to the gym', 'Playing a sport', 'Hiking or walking', 'At-home workouts'] },
+            { id: 'p12', text: "What's your favorite type of music?", options: ['Pop', 'Rock', 'Hip-Hop/R&B', 'Indie/Alternative'] },
+            { id: 'p13', text: 'When I get a gift, I prefer it to be...', options: ['Practical and useful', 'Sentimental and thoughtful', 'An experience (like tickets)'] },
+            { id: 'p14', text: 'After a long day, I relax by...', options: ['Exercising', 'Talking with friends', 'Watching something mindless', 'Reading or listening to music'] },
+            { id: 'f9', text: 'My ideal vacation is...', options: ['Relaxing on a beach', 'Exploring a new city', 'Adventuring in the mountains'] },
+            { id: 'f11', text: "When traveling, I prefer to...", options: ['Plan every detail', 'Be completely spontaneous'] },
+            { id: 'f13', text: 'City life or the countryside?', options: ['City life', 'Countryside'] },
+            { id: 'f15', text: 'What’s your favorite season?', options: ['Spring', 'Summer', 'Autumn', 'Winter'] },
+        ];
+        const totalQuestions = allQuestions.length;
+
+        // --- UI Elements ---
+        const views = { profile: document.getElementById('profile-view'), matches: document.getElementById('matches-view') };
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const userIdDisplay = document.getElementById('user-id-display');
+        const copyIdBtn = document.getElementById('copy-id-btn');
+        const questionsContainer = document.getElementById('questions-container');
+        const percentageSlider = document.getElementById('match-percentage');
+        const percentageDisplay = document.getElementById('percentage-display');
+        const findMatchesBtn = document.getElementById('find-matches-btn');
+        const findMatchesText = document.getElementById('find-matches-text');
+        const findMatchesSpinner = document.getElementById('find-matches-spinner');
+        const matchesContainer = document.getElementById('matches-container');
+        const noMatchesFound = document.getElementById('no-matches-found');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const ageInput = document.getElementById('age');
+        const genderSelect = document.getElementById('gender');
+        const genderPreferenceSelect = document.getElementById('gender-preference');
+        const prevQuestionBtn = document.getElementById('prev-question-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+
+        // --- Core Functions ---
+
+        function showView(viewName) {
+            Object.values(views).forEach(v => v.classList.add('hidden'));
+            navTabs.forEach(tab => {
+                tab.classList.remove('text-blue-600', 'border-blue-600');
+                tab.classList.add('text-gray-500');
+                if (tab.dataset.view === viewName) {
+                    tab.classList.add('text-blue-600', 'border-blue-600');
+                    tab.classList.remove('text-gray-500');
+                }
+            });
+            views[viewName.replace('-view', '')].classList.remove('hidden');
+        }
+
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => { toast.classList.add('opacity-0'); }, 3000);
+        }
+
+        // --- Local Data Handling ---
+        
+        function getLocalProfile() {
+            const profile = localStorage.getItem('userProfile');
+            return profile ? JSON.parse(profile) : { age: '', gender: '', genderPreference: 'Everyone', answers: {}, matchPercentage: 50 };
+        }
+        
+        function saveLocalProfile(profile) {
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+        }
+        
+        function updateLocalProfile(key, value) {
+            const profile = getLocalProfile();
+            profile[key] = value;
+            saveLocalProfile(profile);
+        }
+
+        function updateLocalAnswer(questionId, answer) {
+            const profile = getLocalProfile();
+            profile.answers[questionId] = answer;
+            saveLocalProfile(profile);
+        }
+        
+        // --- UI Rendering ---
+
+        function renderInitialProfile() {
+             const profile = getLocalProfile();
+             ageInput.value = profile.age;
+             genderSelect.value = profile.gender;
+             genderPreferenceSelect.value = profile.genderPreference;
+             percentageSlider.value = profile.matchPercentage;
+             percentageDisplay.textContent = `${profile.matchPercentage}%`;
+             renderCurrentQuestion();
+        }
+
+        function renderCurrentQuestion() {
+            const profile = getLocalProfile();
+            const question = allQuestions[currentQuestionIndex];
+            
+            questionsContainer.innerHTML = '';
+            const questionEl = document.createElement('div');
+
+            let optionsHtml = question.options.map(opt => {
+                const isChecked = profile.answers[question.id] === opt;
+                return `
+                    <label class="flex items-center space-x-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <input type="radio" name="${question.id}" value="${opt}" class="form-radio h-5 w-5 text-blue-600" ${isChecked ? 'checked' : ''}>
+                        <span class="text-lg">${opt}</span>
+                    </label>
+                `;
+            }).join('');
+
+            questionEl.innerHTML = `
+                <p class="font-semibold text-xl mb-4">${currentQuestionIndex + 1}. ${question.text}</p>
+                <div class="space-y-2">${optionsHtml}</div>
+            `;
+            questionsContainer.appendChild(questionEl);
+
+            prevQuestionBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+        }
+
+        function renderMatches(matches = []) {
+             const savedMatches = localStorage.getItem('userMatches');
+             const matchesToRender = matches.length > 0 ? matches : (savedMatches ? JSON.parse(savedMatches) : []);
+             
+             matchesContainer.innerHTML = '';
+             if(matchesToRender.length === 0) {
+                 matchesContainer.appendChild(noMatchesFound);
+                 noMatchesFound.style.display = 'block';
+                 return;
+             }
+             
+             noMatchesFound.style.display = 'none';
+
+             matchesToRender.forEach(match => {
+                 const matchEl = document.createElement('div');
+                 matchEl.className = 'bg-gray-100 dark:bg-gray-700 p-4 rounded-xl text-center';
+                 matchEl.innerHTML = `
+                    <p class="font-semibold text-lg">${match.age || 'N/A'}, ${match.gender || 'N/A'}</p>
+                     <p class="font-mono text-sm text-gray-500 dark:text-gray-400 truncate" title="${match.id}">ID: ...${match.id.slice(-8)}</p>
+                     <p class="text-2xl font-bold mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">${match.percentage}%</p>
+                     <p class="text-sm font-medium">Match (${match.commonQuestions} questions)</p>
+                 `;
+                 matchesContainer.appendChild(matchEl);
+             });
+
+             if(matches.length > 0) {
+                localStorage.setItem('userMatches', JSON.stringify(matches));
+             }
+        }
+
+        // --- Matching Logic ---
+
+        async function findMatches() {
+            const myProfile = getLocalProfile();
+
+            if (!myProfile.age || !myProfile.gender) {
+                showToast("Please fill out your Age and Gender first!");
+                return;
+            }
+             if (Object.keys(myProfile.answers).length < 5) {
+                showToast(`Please answer at least 5 questions to find matches.`);
+                return;
+            }
+            
+            findMatchesBtn.disabled = true;
+            findMatchesText.classList.add('hidden');
+            findMatchesSpinner.classList.remove('hidden');
+
+            try {
+                const myProfileRef = doc(db, `artifacts/${appId}/public/data/profiles`, userId);
+                await setDoc(myProfileRef, myProfile);
+
+                const profilesCollection = collection(db, `artifacts/${appId}/public/data/profiles`);
+                const querySnapshot = await getDocs(profilesCollection);
+                
+                const allProfiles = [];
+                querySnapshot.forEach(doc => {
+                    if (doc.id !== userId) {
+                        allProfiles.push({ id: doc.id, ...doc.data() });
+                    }
+                });
+
+                const myMatches = [];
+                for (const theirProfile of allProfiles) {
+                    if (!theirProfile.gender || !myProfile.genderPreference) continue;
+
+                    const iWantThem = myProfile.genderPreference === 'Everyone' || myProfile.genderPreference.includes(theirProfile.gender);
+                    const theyWantMe = theirProfile.genderPreference === 'Everyone' || theirProfile.genderPreference.includes(myProfile.gender);
+
+                    if (!iWantThem || !theyWantMe) continue;
+                    
+                    const myAnswerKeys = Object.keys(myProfile.answers);
+                    const theirAnswerKeys = Object.keys(theirProfile.answers || {});
+                    const commonKeys = myAnswerKeys.filter(key => theirAnswerKeys.includes(key));
+
+                    if (commonKeys.length < 5) continue; // Minimum threshold for a meaningful match
+
+                    let matchingAnswers = 0;
+                    commonKeys.forEach(key => {
+                        if (myProfile.answers[key] === theirProfile.answers[key]) {
+                            matchingAnswers++;
+                        }
+                    });
+
+                    const matchPercentage = (matchingAnswers / commonKeys.length) * 100;
+                    
+                    if (matchPercentage >= myProfile.matchPercentage && matchPercentage >= (theirProfile.matchPercentage || 50)) {
+                         myMatches.push({ 
+                             id: theirProfile.id, percentage: Math.round(matchPercentage),
+                             age: theirProfile.age, gender: theirProfile.gender,
+                             commonQuestions: commonKeys.length
+                        });
+                    }
+                }
+                
+                myMatches.sort((a,b) => b.percentage - a.percentage);
+                renderMatches(myMatches);
+                showToast(`Found ${myMatches.length} new match(es)!`);
+                showView('matches-view');
+
+            } catch (error) {
+                console.error("Error finding matches:", error);
+                showToast("Could not connect to find matches. Please try again.");
+            } finally {
+                findMatchesBtn.disabled = false;
+                findMatchesText.classList.remove('hidden');
+                findMatchesSpinner.classList.add('hidden');
+            }
+        }
+
+        // --- Event Listeners & Initialization ---
+
+        function setupEventListeners() {
+            navTabs.forEach(tab => tab.addEventListener('click', () => showView(tab.dataset.view)));
+            
+            questionsContainer.addEventListener('change', e => {
+                if(e.target.type === 'radio') {
+                    updateLocalAnswer(e.target.name, e.target.value);
+                }
+            });
+
+            prevQuestionBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                } else { // Loop from end to beginning
+                    currentQuestionIndex = totalQuestions - 1;
+                }
+                renderCurrentQuestion();
+            });
+            
+            nextQuestionBtn.addEventListener('click', () => {
+                if (currentQuestionIndex < totalQuestions - 1) {
+                    currentQuestionIndex++;
+                } else { // Loop from beginning to end
+                    currentQuestionIndex = 0;
+                }
+                renderCurrentQuestion();
+            });
+
+            ageInput.addEventListener('change', e => updateLocalProfile('age', e.target.value));
+            genderSelect.addEventListener('change', e => updateLocalProfile('gender', e.target.value));
+            genderPreferenceSelect.addEventListener('change', e => updateLocalProfile('genderPreference', e.target.value));
+            percentageSlider.addEventListener('change', e => updateLocalProfile('matchPercentage', parseInt(e.target.value, 10)));
+            percentageSlider.addEventListener('input', e => {
+                 percentageDisplay.textContent = `${e.target.value}%`;
+            });
+            
+            findMatchesBtn.addEventListener('click', findMatches);
+
+            copyIdBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(userIdDisplay.textContent)
+                .then(() => showToast("Your User ID has been copied!"))
+                .catch(err => {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = userIdDisplay.textContent;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try { document.execCommand('copy'); showToast("Your User ID has been copied!"); }
+                    catch (err) { showToast("Failed to copy ID."); }
+                    document.body.removeChild(textArea);
+                });
+            });
+        }
+        
+        function main() {
+            appId = typeof __app_id !== 'undefined' ? __app_id : 'answer-connect-default';
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+            if (!firebaseConfig) {
+                document.getElementById('app-container').innerHTML = '<p class="text-red-500 text-center">Error: App configuration is missing. Cannot start.</p>';
+                return;
+            }
+            
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    userIdDisplay.textContent = userId;
+                    renderInitialProfile();
+                    renderMatches();
+                    setupEventListeners();
+                    showView('profile-view');
+                } else {
+                    try {
+                         if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                         } else {
+                            await signInAnonymously(auth);
+                         }
+                    } catch(error) {
+                        console.error("Sign-in failed:", error);
+                        document.getElementById('app-container').innerHTML = '<p class="text-red-500 text-center">Authentication failed. Please refresh.</p>';
+                    }
+                }
+            });
+        }
+        
+        main();
+
+    </script>
+</body>
+</html>
